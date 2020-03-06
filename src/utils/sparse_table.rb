@@ -61,10 +61,10 @@ class SparseTable
       @sum = @values.sum
     end
 
-    # 選択された項目の文章を返す
-    # @return [String]
-    def text
-      table.fetch(@sum).text
+    # 選択された項目の内容を返す
+    # @return [Object]
+    def content
+      table.fetch(@sum).content
     end
 
     # 表を振った結果を整形する
@@ -85,15 +85,15 @@ class SparseTable
   # 表の項目を表す構造体
   #
   # [+max+]  出目の合計の最大値
-  # [+text+] 文章
-  Item = Struct.new(:max, :text)
+  # [+content+] 内容
+  Item = Struct.new(:max, :content)
 
   # 項目を選ぶときのダイスロールの方法を表す正規表現
   DICE_ROLL_METHOD_RE = /\A(\d+)D(\d+)\z/i.freeze
 
   # 表を振った結果の整形処理（既定の処理）
   DEFAULT_FORMATTER = lambda do |table, result|
-    "#{table.name}(#{result.sum}) ＞ #{result.text}"
+    "#{table.name}(#{result.sum}) ＞ #{result.content}"
   end
 
   # @return [String] 表の名前
@@ -140,7 +140,7 @@ class SparseTable
   #       [12, 'その部位が吹き飛ぶ（腕、脚、頭）または3箇所の致命的命中（胴）']
   #     ]
   #   ) do |table, result|
-  #     "クリティカル発生? ＞ #{result.sum}[#{result.values}] ＞ #{result.text}"
+  #     "クリティカル発生? ＞ #{result.sum}[#{result.values}] ＞ #{result.content}"
   #   end
   #
   #   CRITICAL_TABLE_WITH_FORMATTER.roll.format
@@ -206,7 +206,7 @@ class SparseTable
     end
 
     @items = sorted_items.
-             map { |max, text| Item.new(max, text) }.
+             map { |max, content| Item.new(max, content) }.
              freeze
 
     self
